@@ -1,11 +1,16 @@
 const axios = require('axios');
 const HttpsProxyAgent = require('https-proxy-agent');
 const fs = require('fs');
+const readline = require('readline');
 
-const targetUrl = 'http://example.com';  // Замените на целевой URL
+const rl = readline.createInterface({
+  input: process.stdin,
+  output: process.stdout
+});
 
 async function sendHttpRequest() {
   try {
+    const targetUrl = await askTargetUrl();
     const proxy = await setupProxyAgent();
     const agent = new HttpsProxyAgent(`http://${proxy.ipAddress}:${proxy.port}`);
     const userAgent = getRandomUserAgent();
@@ -21,6 +26,14 @@ async function sendHttpRequest() {
   } catch (error) {
     console.error(error);
   }
+}
+
+async function askTargetUrl() {
+  return new Promise((resolve, reject) => {
+    rl.question('Введите URL сайта для проверки: ', (answer) => {
+      resolve(answer);
+    });
+  });
 }
 
 async function setupProxyAgent() {
