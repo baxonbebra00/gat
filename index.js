@@ -1,12 +1,8 @@
 const axios = require('axios');
 const HttpsProxyAgent = require('https-proxy-agent');
+const fs = require('fs');
 
 const targetUrl = 'http://example.com';  // Замените на целевой URL
-const userAgents = [
-  'Mozilla/5.0 (Windows NT 10.0; Win64; x64)',
-  'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.121 Safari/537.36',
-  'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:81.0) Gecko/20100101 Firefox/81.0'
-];  // Замените на свои собственные юзерагенты
 
 async function sendHttpRequest() {
   try {
@@ -57,8 +53,9 @@ function getRandomProxy(proxyList) {
 }
 
 function getRandomUserAgent() {
-  const randomIndex = Math.floor(Math.random() * userAgents.length);
-  return userAgents[randomIndex];
+  const users = fs.readFileSync('users.txt', 'utf8').split('\n');
+  const randomIndex = Math.floor(Math.random() * users.length);
+  return users[randomIndex];
 }
 
 sendHttpRequest();
